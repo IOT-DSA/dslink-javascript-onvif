@@ -1,0 +1,26 @@
+{
+  "name": "dslink-javascript-onvif",
+  "version": "1.0.0",
+  "description": "DSLink for ONVIF-compatible IP cameras using the new DSLink JavaScript SDK.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/IOT-DSA/dslink-javascript-onvif.git"
+  },
+  "author": "",
+  "license": "Apache",
+  "bugs": {
+    "url": "https://github.com/IOT-DSA/dslink-javascript-onvif/issues"
+  },
+  "homepage": "https://github.com/IOT-DSA/dslink-javascript-onvif",
+  "dependencies": {
+    "dslink": "IOT-DSA/sdk-dslink-javascript#artifacts",
+    "es6-promises": "^1.0.10",
+    "http-parser-js": "^0.3.0",
+    "onvif": "^0.3.0",
+    "yellowstone": "^1.0.0"
+  }
+}
