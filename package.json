@@ -19,9 +19,8 @@
   "dependencies": {
     "babel": "^5.6.14",
     "dslink": "IOT-DSA/sdk-dslink-javascript#artifacts",
-    "es6-promises": "^1.0.10",
     "http-parser-js": "^0.3.0",
-    "onvif": "^0.3.0",
-    "yellowstone": "^1.0.1"
+    "yellowstone": "^1.0.1",
+    "onvif": "^0.3.0"
   }
 }
