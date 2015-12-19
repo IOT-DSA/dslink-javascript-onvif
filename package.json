@@ -18,7 +18,7 @@
   "homepage": "https://github.com/IOT-DSA/dslink-javascript-onvif",
   "dependencies": {
     "babel": "^5.6.14",
-    "dslink": "IOT-DSA/sdk-dslink-javascript#artifacts",
+    "dslink": "git://github.com/IOT-DSA/sdk-dslink-javascript.git#artifacts",
     "http-parser-js": "^0.3.0",
     "yellowstone": "^1.0.1",
     "onvif": "^0.3.0"

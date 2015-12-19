@@ -7,7 +7,7 @@
     "node": ">=0.10.0"
   },
   "getDependencies": [
-    "npm install"
+    "node install.js"
   ],
   "configs": {
     "broker": {
