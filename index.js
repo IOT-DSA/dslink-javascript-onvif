@@ -1,4 +1,2 @@
-require("babel/register")({
-  only: /lib/
-});
+require("babel-register")();
 require('./lib');
