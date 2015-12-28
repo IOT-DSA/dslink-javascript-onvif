@@ -5,6 +5,25 @@ var _createClass = (function () { function defineProperties(target, props) { for
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
+exports.GetSnapshot = undefined;
+
+var _dslink = require('dslink');
+
+var _dslink2 = _interopRequireDefault(_dslink);
+
+var _http = require('http');
+
+var _url = require('url');
+
+var _add_device = require('../add_device');
+
+var _utils = require('../../utils');
+
+var _winston = require('winston');
+
+var _winston2 = _interopRequireDefault(_winston);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
@@ -12,37 +31,27 @@ function _possibleConstructorReturn(self, call) { if (!self) { throw new Referen
 
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
-var _require = require('../../context');
-
-var error = _require.error;
-var cameras = _require.cameras;
-var DS = _require.DS;
-
-var _require2 = require('http');
-
-var get = _require2.get;
-
-var _require3 = require('url');
-
-var parse = _require3.parse;
-
-var GetSnapshot = (function (_DS$SimpleNode$class) {
-  _inherits(GetSnapshot, _DS$SimpleNode$class);
+var GetSnapshot = exports.GetSnapshot = (function (_SimpleNode$class) {
+  _inherits(GetSnapshot, _SimpleNode$class);
 
   function GetSnapshot(path, nodeProvider) {
     _classCallCheck(this, GetSnapshot);
 
     var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(GetSnapshot).call(this, path, nodeProvider));
 
-    var cam = cameras[_this.path.split("/")[1]];
-    _this.valueReady = false;
-    _this.uri = new Promise(function (resolve, reject) {
-      cam.getSnapshotUri(function (e, uri) {
-        if (e) return reject(e);
-        resolve(uri.uri.trim());
-      });
-    }).catch(function (e) {
-      error(e.stack);
+    var cam = _add_device.cameras[_this.configs.$$name];
+
+    var _promiseify = (0, _utils.promiseify)();
+
+    var promise = _promiseify.promise;
+    var _ = _promiseify._;
+
+    cam.getSnapshotUri(_);
+
+    _this.uri = promise.then(function (uri) {
+      return uri.uri.trim();
+    }).catch(function (err) {
+      _winston2.default.error(err + ':\n' + err.stack);
     });
     return _this;
   }
@@ -50,13 +59,13 @@ var GetSnapshot = (function (_DS$SimpleNode$class) {
   _createClass(GetSnapshot, [{
     key: 'onInvoke',
     value: function onInvoke() {
-      var cam = cameras[this.path.split("/")[1]];
+      var cam = _add_device.cameras[this.configs.$$name];
       return this.uri.then(function (uri) {
         return new Promise(function (resolve, reject) {
-          var opt = parse(uri);
+          var opt = (0, _url.parse)(uri);
           opt.auth = cam.username + ':' + cam.password;
 
-          get(opt, function (res) {
+          (0, _http.get)(opt, function (res) {
             if (typeof res.statusCode === 'number' && res.statusCode !== 200) {
               reject(res.statusCode);
               return;
@@ -71,22 +80,17 @@ var GetSnapshot = (function (_DS$SimpleNode$class) {
             res.on('end', function () {
               resolve(Buffer.concat(data));
             });
-          }).on('error', function (e) {
-            error(e);
+          }).on('error', function (err) {
+            _winston2.default.error(err + ':\n' + err.stack);
           });
         });
-      }).then(function (data) {
-        return {
-          jpeg: data
-        };
-      }).catch(function (e) {
-        context.error(e);
+      }).then(function (jpeg) {
+        return { jpeg: jpeg };
+      }).catch(function (err) {
+        _winston2.default.error(err + ':\n' + err.stack);
       });
     }
   }]);
 
   return GetSnapshot;
-})(DS.SimpleNode.class);
-
-exports.default = GetSnapshot;
-module.exports = exports['default'];
+})(_dslink.SimpleNode.class);

@@ -5,6 +5,21 @@ var _createClass = (function () { function defineProperties(target, props) { for
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
+exports.PanTiltZoom = undefined;
+
+var _dslink = require('dslink');
+
+var _dslink2 = _interopRequireDefault(_dslink);
+
+var _add_device = require('../add_device');
+
+var _utils = require('../../utils');
+
+var _winston = require('winston');
+
+var _winston2 = _interopRequireDefault(_winston);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
@@ -12,13 +27,7 @@ function _possibleConstructorReturn(self, call) { if (!self) { throw new Referen
 
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
-var _require = require('../../context');
-
-var error = _require.error;
-var cameras = _require.cameras;
-var DS = _require.DS;
-
-var PanTiltZoom = (function (_DS$SimpleNode$class) {
+var PanTiltZoom = exports.PanTiltZoom = (function (_DS$SimpleNode$class) {
   _inherits(PanTiltZoom, _DS$SimpleNode$class);
 
   function PanTiltZoom() {
@@ -35,35 +44,37 @@ var PanTiltZoom = (function (_DS$SimpleNode$class) {
       if (params.tilt) obj.y = parseInt(params.tilt);
       if (params.zoom) obj.zoom = parseInt(params.zoom);
 
-      var cam = cameras[this.path.split("/")[1]];
+      var cam = _add_device.cameras[this.configs.$$name];
       return new Promise(function (resolve, reject) {
-        cam.continuousMove(obj, function (e) {
-          if (e) return reject(e);
-          resolve({});
-        });
+        var _promiseify = (0, _utils.promiseify)({});
+
+        var promise = _promiseify.promise;
+        var _ = _promiseify._;
+
+        cam.continuousMove(obj, _);
+
+        return promise;
       }).then(function () {
-        return new Promise(function (resolve, reject) {
-          if (params.duration) {
-            setTimeout(function () {
-              cam.stop({
-                panTilt: typeof obj.zoom === 'undefined',
-                zoom: typeof obj.zoom !== 'undefined'
-              }, function () {
-                resolve();
-              });
-            }, parseInt(params.duration) * 1000);
-          } else {
-            resolve();
-          }
-        });
-      }).catch(function (e) {
-        error(e);
+        if (!params.duration) return {};
+
+        var _promiseify2 = (0, _utils.promiseify)();
+
+        var promise = _promiseify2.promise;
+        var _ = _promiseify2._;
+
+        setTimeout(function () {
+          cam.stop({
+            panTilt: typeof obj.zoom === 'undefined',
+            zoom: typeof obj.zoom !== 'undefined'
+          }, _);
+        }, parseInt(params.duration) * 1000);
+
+        return promise;
+      }).catch(function (err) {
+        _winston2.default.error(err + ':\n' + err.stack);
       });
     }
   }]);
 
   return PanTiltZoom;
-})(DS.SimpleNode.class);
-
-exports.default = PanTiltZoom;
-module.exports = exports['default'];
+})(_dslink2.default.SimpleNode.class);
