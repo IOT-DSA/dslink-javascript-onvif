@@ -2,6 +2,8 @@
 
 var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
 
+var _get = function get(object, property, receiver) { if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { return get(parent, property, receiver); } } else if ("value" in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } };
+
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
@@ -37,26 +39,30 @@ var GetSnapshot = exports.GetSnapshot = (function (_SimpleNode$class) {
   function GetSnapshot(path, nodeProvider) {
     _classCallCheck(this, GetSnapshot);
 
-    var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(GetSnapshot).call(this, path, nodeProvider));
-
-    var cam = _add_device.cameras[_this.configs.$$name];
-
-    var _promiseify = (0, _utils.promiseify)();
-
-    var promise = _promiseify.promise;
-    var _ = _promiseify._;
-
-    cam.getSnapshotUri(_);
-
-    _this.uri = promise.then(function (uri) {
-      return uri.uri.trim();
-    }).catch(function (err) {
-      _winston2.default.error(err + ':\n' + err.stack);
-    });
-    return _this;
+    return _possibleConstructorReturn(this, Object.getPrototypeOf(GetSnapshot).call(this, path, nodeProvider));
   }
 
   _createClass(GetSnapshot, [{
+    key: 'load',
+    value: function load(map) {
+      _get(Object.getPrototypeOf(GetSnapshot.prototype), 'load', this).call(this, map);
+
+      var cam = _add_device.cameras[this.configs.$$name];
+
+      var _promiseify = (0, _utils.promiseify)();
+
+      var promise = _promiseify.promise;
+      var _ = _promiseify._;
+
+      cam.getSnapshotUri(_);
+
+      this.uri = promise.then(function (uri) {
+        return uri.uri.trim();
+      }).catch(function (err) {
+        _winston2.default.error(err + ':\n' + err.stack);
+      });
+    }
+  }, {
     key: 'onInvoke',
     value: function onInvoke() {
       var cam = _add_device.cameras[this.configs.$$name];

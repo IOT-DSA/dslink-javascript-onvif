@@ -10,8 +10,6 @@
     "type": "git",
     "url": "https://github.com/IOT-DSA/dslink-javascript-onvif.git"
   },
-  "author": "",
-  "license": "Apache",
   "bugs": {
     "url": "https://github.com/IOT-DSA/dslink-javascript-onvif/issues"
   },
@@ -19,10 +17,8 @@
   "dependencies": {
     "babel-polyfill": "^6.3.14",
     "dslink": "git://github.com/IOT-DSA/sdk-dslink-javascript.git#artifacts",
-    "http-parser-js": "^0.4.1",
     "onvif": "^0.4.0",
-    "winston": "^2.1.1",
-    "yellowstone": "^1.0.3"
+    "winston": "^2.1.1"
   },
   "devDependencies": {
     "babel-cli": "^6.3.17",

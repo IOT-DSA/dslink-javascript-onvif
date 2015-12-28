@@ -20,7 +20,7 @@ function npmInstall() {
   if(base !== md5) {
     fs.writeFileSync(MD5_PATH, base);
 
-    var npm = child.exec("npm install");
+    var npm = child.exec("npm install --production");
     console.log("running npm install");
     npm.stdout.on('data', function(data) {
       console.log(data);

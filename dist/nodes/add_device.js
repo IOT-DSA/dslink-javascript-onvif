@@ -46,23 +46,21 @@ var AddDevice = exports.AddDevice = (function (_SimpleNode$class) {
       var _this2 = this;
 
       var prettyName = '@' + params.hostname + ':' + params.port;
-      return new Promise(function (accept, reject) {
-        console.log('Adding new camera ' + prettyName + ', with username ' + params.username + '.');
+      console.log('Adding new camera ' + prettyName + ', with username ' + params.username + '.');
 
-        var _promiseify = (0, _utils.promiseify)(camera);
+      var _promiseify = (0, _utils.promiseify)();
 
-        var promise = _promiseify.promise;
-        var _ = _promiseify._;
+      var promise = _promiseify.promise;
+      var _ = _promiseify._;
 
-        var camera = new _onvif.Cam({
-          hostname: params.hostname,
-          username: params.username,
-          port: parseInt(params.port),
-          password: params.password
-        }, _);
+      var camera = new _onvif.Cam({
+        hostname: params.hostname,
+        username: params.username,
+        port: parseInt(params.port),
+        password: params.password
+      }, _);
 
-        return promise;
-      }).then(function (camera) {
+      promise.then(function () {
         console.log('Camera ' + prettyName + ' loaded successfully, getting device information.');
         cameras[params.name] = camera;
 

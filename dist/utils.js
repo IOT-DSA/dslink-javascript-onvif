@@ -20,38 +20,12 @@ function generateProfiles() {
 }
 
 function promiseify(passed_data) {
-  var promise_cb, _resolve, _reject;
-
-  function resolve(data) {
-    if (_resolve) {
-      _resolve(data);
-    } else {
-      promise_cb = function () {
-        _resolve(data);
-      };
-    }
-  }
-
-  function reject(err) {
-    if (_reject) {
-      _reject(err);
-    } else {
-      promise_cb = function () {
-        _reject(err);
-      };
-    }
-  }
+  var resolve, reject;
 
   return {
     promise: new Promise(function (resolve_cb, reject_cb) {
-      _resolve = function (data) {
-        return resolve_cb(data);
-      };
-      _reject = function (err) {
-        return reject_cb(err);
-      };
-
-      if (promise_cb) promise_cb();
+      resolve = resolve_cb;
+      reject = reject_cb;
     }),
     _: function _(err, data) {
       if (err) {

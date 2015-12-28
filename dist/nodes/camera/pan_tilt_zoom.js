@@ -45,16 +45,15 @@ var PanTiltZoom = exports.PanTiltZoom = (function (_DS$SimpleNode$class) {
       if (params.zoom) obj.zoom = parseInt(params.zoom);
 
       var cam = _add_device.cameras[this.configs.$$name];
-      return new Promise(function (resolve, reject) {
-        var _promiseify = (0, _utils.promiseify)({});
 
-        var promise = _promiseify.promise;
-        var _ = _promiseify._;
+      var _promiseify = (0, _utils.promiseify)({});
 
-        cam.continuousMove(obj, _);
+      var promise = _promiseify.promise;
+      var _ = _promiseify._;
 
-        return promise;
-      }).then(function () {
+      cam.continuousMove(obj, _);
+
+      promise.then(function () {
         if (!params.duration) return {};
 
         var _promiseify2 = (0, _utils.promiseify)();
