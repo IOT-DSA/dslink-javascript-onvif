@@ -17,13 +17,16 @@
   },
   "homepage": "https://github.com/IOT-DSA/dslink-javascript-onvif",
   "dependencies": {
-    "babel-plugin-add-module-exports": "^0.1.2",
+    "dslink": "git://github.com/IOT-DSA/sdk-dslink-javascript.git#artifacts",
     "babel-polyfill": "^6.3.14",
+    "http-parser-js": "^0.4.1",
+    "yellowstone": "^1.0.3",
+    "onvif": "^0.4.0"
+  },
+  "devDependencies": {
+    "babel-cli": "^6.3.17",
     "babel-preset-es2015": "^6.3.13",
     "babel-register": "^6.3.13",
-    "dslink": "git://github.com/IOT-DSA/sdk-dslink-javascript.git#artifacts",
-    "http-parser-js": "^0.4.1",
-    "onvif": "^0.4.0",
-    "yellowstone": "^1.0.3"
+    "babel-plugin-add-module-exports": "^0.1.2"
   }
 }

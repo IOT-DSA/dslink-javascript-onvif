@@ -1,13 +1,13 @@
 {
   "name": "dslink-javascript-onvif",
   "version": "1.0.0",
-  "main": "index.js",
+  "main": "dist/index.js",
   "description": "DSLink for ONVIF-compatible IP cameras using the new DSLink JavaScript SDK.",
   "engines": {
     "node": ">=0.10.0"
   },
   "getDependencies": [
-    "node install.js"
+    "node install.js --production"
   ],
   "configs": {
     "broker": {
