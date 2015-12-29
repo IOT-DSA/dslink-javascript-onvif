@@ -13,13 +13,17 @@ var _dslink2 = _interopRequireDefault(_dslink);
 
 var _add_device = require('../add_device');
 
-var _utils = require('../../utils');
+var _structure = require('../../structure');
+
+var _yellowstone = require('yellowstone');
 
 var _winston = require('winston');
 
 var _winston2 = _interopRequireDefault(_winston);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _typeof(obj) { return obj && typeof Symbol !== "undefined" && obj.constructor === Symbol ? "symbol" : typeof obj; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
@@ -30,33 +34,75 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 var GetStream = exports.GetStream = (function (_SimpleNode$class) {
   _inherits(GetStream, _SimpleNode$class);
 
-  function GetStream() {
+  function GetStream(path, provider) {
     _classCallCheck(this, GetStream);
 
-    return _possibleConstructorReturn(this, Object.getPrototypeOf(GetStream).apply(this, arguments));
+    var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(GetStream).call(this, path, provider));
+
+    _this.serializable = false;
+    return _this;
   }
 
   _createClass(GetStream, [{
     key: 'onInvoke',
-    value: function onInvoke() {
-      var cam = _add_device.cameras[this.configs.$$name];
+    value: function onInvoke(params) {
+      var _this2 = this;
 
-      var _promiseify = (0, _utils.promiseify)();
+      try {
+        var _ret = (function () {
+          var result = new _dslink.AsyncTableResult(_structure.getStreamColumns);
+          result.update([], _dslink.StreamStatus.open);
 
-      var promise = _promiseify.promise;
-      var _ = _promiseify._;
+          var cam = _add_device.cameras[_this2.configs.$$name];
 
-      cam.getStreamUri({
-        protocol: 'RTSP'
-      }, _);
+          var _promiseify = promiseify();
 
-      return promise.then(function (stream) {
-        return {
-          uri: stream.uri.toString()
-        };
-      }).catch(function (err) {
+          var promise = _promiseify.promise;
+          var _ = _promiseify._;
+
+          cam.getStreamUri({
+            protocol: 'RTSP'
+          }, function (err, stream) {
+            function error(err) {
+              _winston2.default.error(err + ':\n' + err.stack);
+              result.close();
+            }
+
+            if (err) return error(err);
+
+            var uri = stream.uri.toString();
+            console.log(uri);
+
+            var client = new _yellowstone.RtspClient();
+
+            client.on('data', function (data, packet) {
+              result.update([{
+                data: data
+              }]);
+            });
+
+            client.connect(uri).then(function (details) {
+              client.play();
+
+              result.onClose = function (res) {
+                client.removeAllListeners('data');
+                client.pause();
+                client.close();
+              };
+            }).catch(function (err) {
+              return error(err);
+            });
+          });
+
+          return {
+            v: result
+          };
+        })();
+
+        if ((typeof _ret === 'undefined' ? 'undefined' : _typeof(_ret)) === "object") return _ret.v;
+      } catch (e) {
         _winston2.default.error(err + ':\n' + err.stack);
-      });
+      }
     }
   }]);
 

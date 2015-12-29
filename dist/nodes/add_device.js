@@ -6,6 +6,7 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 exports.AddDevice = exports.cameras = undefined;
+exports.addCamera = addCamera;
 
 var _dslink = require('dslink');
 
@@ -31,6 +32,55 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 
 var cameras = exports.cameras = {};
 
+function addCamera(params) {
+  var prettyName = '@' + params.hostname + ':' + params.port;
+  console.log('Adding new camera ' + prettyName + ', with username ' + params.username + '.');
+
+  var _promiseify = (0, _utils.promiseify)({
+    allowAdditionalData: true
+  });
+
+  var promise = _promiseify.promise;
+  var _ = _promiseify._;
+
+  var camera = new _onvif.Cam({
+    hostname: params.hostname,
+    username: params.username,
+    port: parseInt(params.port),
+    password: params.password
+  }, _);
+
+  return promise.then(function () {
+    console.log('Camera ' + prettyName + ' loaded successfully, getting device information.');
+    cameras[params.name] = camera;
+
+    var _promiseify2 = (0, _utils.promiseify)();
+
+    var promise = _promiseify2.promise;
+    var _ = _promiseify2._;
+
+    camera.getDeviceInformation(_);
+
+    return promise;
+  }).then(function (data) {
+    console.log('Camera ' + prettyName + ' device information added successfully, getting snapshot URL.');
+
+    var _promiseify3 = (0, _utils.promiseify)();
+
+    var promise = _promiseify3.promise;
+    var _ = _promiseify3._;
+
+    camera.getSnapshotUri(_);
+
+    return promise.then(function (uri) {
+      return {
+        data: data,
+        uri: uri.uri.trim()
+      };
+    });
+  });
+}
+
 var AddDevice = exports.AddDevice = (function (_SimpleNode$class) {
   _inherits(AddDevice, _SimpleNode$class);
 
@@ -46,38 +96,17 @@ var AddDevice = exports.AddDevice = (function (_SimpleNode$class) {
       var _this2 = this;
 
       var prettyName = '@' + params.hostname + ':' + params.port;
-      console.log('Adding new camera ' + prettyName + ', with username ' + params.username + '.');
 
-      var _promiseify = (0, _utils.promiseify)();
+      addCamera(params).then(function (obj) {
+        var data = obj.data;
+        var uri = obj.uri;
 
-      var promise = _promiseify.promise;
-      var _ = _promiseify._;
-
-      var camera = new _onvif.Cam({
-        hostname: params.hostname,
-        username: params.username,
-        port: parseInt(params.port),
-        password: params.password
-      }, _);
-
-      promise.then(function () {
-        console.log('Camera ' + prettyName + ' loaded successfully, getting device information.');
-        cameras[params.name] = camera;
-
-        var _promiseify2 = (0, _utils.promiseify)();
-
-        var promise = _promiseify2.promise;
-        var _ = _promiseify2._;
-
-        camera.getDeviceInformation(_);
-
-        return promise;
-      }).then(function (data) {
-        console.log('Camera ' + prettyName + ' device information added successfully, adding node.');
-        _this2.provider.addNode('/' + params.name, (0, _structure.cameraStructure)(params, data));
+        console.log('Camera ' + prettyName + ' initialized successfully, adding node.');
+        _this2.provider.addNode('/' + params.name, (0, _structure.cameraStructure)(params, data, uri));
 
         return {};
       }).catch(function (err) {
+        if (err.additionalData) _winston2.default.error(err.err + ':\n' + err.err.stack + '\n' + err.additionalData);
         _winston2.default.error(err + ':\n' + err.stack);
       });
     }

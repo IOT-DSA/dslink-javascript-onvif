@@ -19,20 +19,28 @@ function generateProfiles() {
   return map;
 }
 
-function promiseify(passed_data) {
-  var resolve, reject;
+function promiseify() {
+  var obj = arguments.length <= 0 || arguments[0] === undefined ? {} : arguments[0];
+  var returnedData = obj.returnedData;
+  var allowAdditionalData = obj.allowAdditionalData;
+
+  allowAdditionalData = allowAdditionalData || false;
+
+  var resolve = undefined,
+      reject = undefined;
 
   return {
     promise: new Promise(function (resolve_cb, reject_cb) {
       resolve = resolve_cb;
       reject = reject_cb;
     }),
-    _: function _(err, data) {
+    _: function _(err, data, additionalData) {
       if (err) {
+        if (allowAdditionalData) return reject({ err: err, additionalData: additionalData });
         return reject(err);
       }
 
-      resolve(passed_data || data);
+      resolve(returnedData || data);
     }
   };
 }

@@ -30,7 +30,12 @@ var defaultNodes = exports.defaultNodes = {
   }
 };
 
-function cameraStructure(params, data) {
+var getStreamColumns = exports.getStreamColumns = [{
+  name: 'data',
+  type: 'binary'
+}];
+
+function cameraStructure(params, data, snapshotUrl) {
   var username = params.username;
   var password = params.password;
   var hostname = params.hostname;
@@ -42,12 +47,20 @@ function cameraStructure(params, data) {
   var hardwareId = data.hardwareId;
 
   return {
+    $is: 'device',
     $$username: username,
     $$password: password,
     $$hostname: hostname,
     $$port: parseInt(port),
     $$name: name,
+    snapshotUrl: {
+      $name: 'Snapshot URL',
+      $is: 'unserializable',
+      $type: 'string',
+      '?value': snapshotUrl
+    },
     platform: {
+      $is: 'unserializable',
       manufacturer: {
         $name: 'Manufacturer',
         $type: 'string',
@@ -79,6 +92,7 @@ function cameraStructure(params, data) {
       $name: 'Get JPEG Snapshot',
       $invokable: 'write',
       $$name: name,
+      $$snapshotUrl: snapshotUrl,
       $columns: [{
         name: 'jpeg',
         type: 'binary'
@@ -87,15 +101,11 @@ function cameraStructure(params, data) {
     /*
     getStream: {
       $is: 'getStream',
-      $name: 'Get MPEG Stream',
+      $name: 'Get Video Stream',
+      $$name: name,
       $invokable: 'write',
-      $columns: [
-        {
-          // temp
-          name: 'uri',
-          type: 'string'
-        }
-      ]
+      $result: 'stream',
+      $columns: getStreamColumns
     },
     */
     pan: {

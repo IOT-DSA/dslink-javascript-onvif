@@ -28,3 +28,5 @@ node_modules
 
 .dslink.md5
 .dslink.commit
+.dslink.key
+nodes.json

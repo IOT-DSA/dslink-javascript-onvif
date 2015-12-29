@@ -17,8 +17,9 @@
   "dependencies": {
     "babel-polyfill": "^6.3.14",
     "dslink": "git://github.com/IOT-DSA/sdk-dslink-javascript.git#artifacts",
-    "onvif": "^0.4.0",
-    "winston": "^2.1.1"
+    "onvif": "git://github.com/mbullington/onvif.git",
+    "winston": "^2.1.1",
+    "yellowstone": "^1.0.3"
   },
   "devDependencies": {
     "babel-cli": "^6.3.17",

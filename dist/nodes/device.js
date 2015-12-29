@@ -7,19 +7,15 @@ var _get = function get(object, property, receiver) { if (object === null) objec
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.GetSnapshot = undefined;
+exports.DeviceNode = undefined;
 
 var _dslink = require('dslink');
 
 var _dslink2 = _interopRequireDefault(_dslink);
 
-var _http = require('http');
+var _structure = require('../structure');
 
-var _url = require('url');
-
-var _add_device = require('../add_device');
-
-var _utils = require('../../utils');
+var _add_device = require('./add_device');
 
 var _winston = require('winston');
 
@@ -33,58 +29,53 @@ function _possibleConstructorReturn(self, call) { if (!self) { throw new Referen
 
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
-var GetSnapshot = exports.GetSnapshot = (function (_SimpleNode$class) {
-  _inherits(GetSnapshot, _SimpleNode$class);
+var wasCalled = {};
 
-  function GetSnapshot(path, provider) {
-    _classCallCheck(this, GetSnapshot);
+var DeviceNode = exports.DeviceNode = (function (_SimpleNode$class) {
+  _inherits(DeviceNode, _SimpleNode$class);
 
-    var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(GetSnapshot).call(this, path, provider));
+  function DeviceNode() {
+    _classCallCheck(this, DeviceNode);
 
-    _this.serializable = false;
-    return _this;
+    return _possibleConstructorReturn(this, Object.getPrototypeOf(DeviceNode).apply(this, arguments));
   }
 
-  _createClass(GetSnapshot, [{
+  _createClass(DeviceNode, [{
     key: 'load',
     value: function load(map) {
-      _get(Object.getPrototypeOf(GetSnapshot.prototype), 'load', this).call(this, map);
-    }
-  }, {
-    key: 'onInvoke',
-    value: function onInvoke() {
-      var cam = _add_device.cameras[this.configs.$$name];
-      var uri = this.configs.$$snapshotUrl;
+      var _this2 = this;
 
-      return new Promise(function (resolve, reject) {
-        var opt = (0, _url.parse)(uri);
-        opt.auth = cam.username + ':' + cam.password;
+      if (!map.platform && !wasCalled[this.path]) {
+        (function () {
+          wasCalled[_this2.path] = true;
 
-        (0, _http.get)(opt, function (res) {
-          if (typeof res.statusCode === 'number' && res.statusCode !== 200) {
-            reject(res.statusCode);
-            return;
-          }
+          var params = {
+            hostname: map.$$hostname,
+            username: map.$$username,
+            password: map.$$password,
+            port: map.$$port,
+            name: map.$$name
+          };
+          var prettyName = '@' + params.hostname + ':' + params.port;
 
-          var data = [];
+          (0, _add_device.addCamera)(params).then(function (obj) {
+            var data = obj.data;
+            var uri = obj.uri;
 
-          res.on('data', function (buf) {
-            data.push(buf);
+            console.log('Camera ' + prettyName + ' loaded successfully from nodes.json, populating node.');
+            _this2.load((0, _structure.cameraStructure)(params, data, uri), false);
+          }).catch(function (err) {
+            _this2.provider.removeNode(_this2.path);
+
+            if (err.additionalData) _winston2.default.error(err.err + ':\n' + err.err.stack + '\n' + err.additionalData);else _winston2.default.error(err + ':\n' + err.stack);
+            _winston2.default.error('Camera ' + prettyName + ' loaded from nodes.json but not able to connect.');
           });
+        })();
+      }
 
-          res.on('end', function () {
-            resolve(Buffer.concat(data));
-          });
-        }).on('error', function (err) {
-          _winston2.default.error(err + ':\n' + err.stack);
-        });
-      }).then(function (jpeg) {
-        return { jpeg: jpeg };
-      }).catch(function (err) {
-        _winston2.default.error(err + ':\n' + err.stack);
-      });
+      _get(Object.getPrototypeOf(DeviceNode.prototype), 'load', this).call(this, map);
     }
   }]);
 
-  return GetSnapshot;
+  return DeviceNode;
 })(_dslink.SimpleNode.class);

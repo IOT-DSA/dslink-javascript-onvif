@@ -30,10 +30,13 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 var PanTiltZoom = exports.PanTiltZoom = (function (_DS$SimpleNode$class) {
   _inherits(PanTiltZoom, _DS$SimpleNode$class);
 
-  function PanTiltZoom() {
+  function PanTiltZoom(path, provider) {
     _classCallCheck(this, PanTiltZoom);
 
-    return _possibleConstructorReturn(this, Object.getPrototypeOf(PanTiltZoom).apply(this, arguments));
+    var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(PanTiltZoom).call(this, path, provider));
+
+    _this.serializable = false;
+    return _this;
   }
 
   _createClass(PanTiltZoom, [{
@@ -46,7 +49,9 @@ var PanTiltZoom = exports.PanTiltZoom = (function (_DS$SimpleNode$class) {
 
       var cam = _add_device.cameras[this.configs.$$name];
 
-      var _promiseify = (0, _utils.promiseify)({});
+      var _promiseify = (0, _utils.promiseify)({
+        returnedData: {}
+      });
 
       var promise = _promiseify.promise;
       var _ = _promiseify._;
