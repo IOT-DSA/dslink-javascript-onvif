@@ -52,11 +52,13 @@ var GetSnapshot = exports.GetSnapshot = (function (_SimpleNode$class) {
     }
   }, {
     key: 'onInvoke',
-    value: function onInvoke() {
+    value: function onInvoke(params) {
+      var _this2 = this;
+
       var cam = _add_device.cameras[this.configs.$$name];
       var uri = this.configs.$$snapshotUrl;
 
-      return new Promise(function (resolve, reject) {
+      var promise = new Promise(function (resolve, reject) {
         var opt = (0, _url.parse)(uri);
         opt.auth = cam.username + ':' + cam.password;
 
@@ -83,6 +85,20 @@ var GetSnapshot = exports.GetSnapshot = (function (_SimpleNode$class) {
       }).catch(function (err) {
         _winston2.default.error(err + ':\n' + err.stack);
       });
+
+      if (params.updateURL) {
+        var pi = (0, _utils.promiseify)();var _ = pi._;var future = pi.promise;
+        cam.getSnapshotUri(_);
+
+        return future.then(function (uri) {
+          _this2.configs = Object.assign(_this2.configs, {
+            $$snapshotUrl: uri.uri.trim()
+          });
+          return promise;
+        });
+      } else {
+        return promise;
+      }
     }
   }]);
 

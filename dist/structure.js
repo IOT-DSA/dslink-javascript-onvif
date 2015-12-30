@@ -93,6 +93,11 @@ function cameraStructure(params, data, snapshotUrl) {
       $invokable: 'write',
       $$name: name,
       $$snapshotUrl: snapshotUrl,
+      $params: [{
+        name: 'updateURL',
+        type: 'bool',
+        default: false
+      }],
       $columns: [{
         name: 'jpeg',
         type: 'binary'
