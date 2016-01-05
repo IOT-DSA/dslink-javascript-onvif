@@ -77,8 +77,12 @@ var GetSnapshot = exports.GetSnapshot = (function (_SimpleNode$class) {
           res.on('end', function () {
             resolve(Buffer.concat(data));
           });
+
+          res.on('error', function (err) {
+            reject(err);
+          });
         }).on('error', function (err) {
-          _winston2.default.error(err + ':\n' + err.stack);
+          reject(err);
         });
       }).then(function (jpeg) {
         return { jpeg: jpeg };
@@ -94,6 +98,7 @@ var GetSnapshot = exports.GetSnapshot = (function (_SimpleNode$class) {
           _this2.configs = Object.assign(_this2.configs, {
             $$snapshotUrl: uri.uri.trim()
           });
+          _this2.provider.getNode('/' + _this2.configs.$$name + '/snapshotUrl').updateValue(uri.uri.trim());
           return promise;
         });
       } else {
