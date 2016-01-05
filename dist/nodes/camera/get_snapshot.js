@@ -87,6 +87,7 @@ var GetSnapshot = exports.GetSnapshot = (function (_SimpleNode$class) {
       }).then(function (jpeg) {
         return { jpeg: jpeg };
       }).catch(function (err) {
+        if (err.code) return _winston2.default.error(err + ':\n' + err.code + '\n' + err.stack);
         _winston2.default.error(err + ':\n' + err.stack);
       });
 
