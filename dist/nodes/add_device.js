@@ -1,11 +1,12 @@
 'use strict';
 
-var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
-
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
 exports.AddDevice = exports.cameras = undefined;
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
 exports.addCamera = addCamera;
 
 var _dslink = require('dslink');
@@ -70,6 +71,7 @@ function addCamera(params) {
     var promise = _promiseify3.promise;
     var _ = _promiseify3._;
 
+
     camera.getSnapshotUri(_);
 
     return promise.then(function (uri) {
@@ -81,7 +83,7 @@ function addCamera(params) {
   });
 }
 
-var AddDevice = exports.AddDevice = (function (_SimpleNode$class) {
+var AddDevice = exports.AddDevice = function (_SimpleNode$class) {
   _inherits(AddDevice, _SimpleNode$class);
 
   function AddDevice() {
@@ -113,6 +115,6 @@ var AddDevice = exports.AddDevice = (function (_SimpleNode$class) {
   }]);
 
   return AddDevice;
-})(_dslink.SimpleNode.class);
+}(_dslink.SimpleNode.class);
 
 ;

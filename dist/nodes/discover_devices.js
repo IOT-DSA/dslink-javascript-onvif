@@ -3,7 +3,7 @@
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.PanTiltZoom = undefined;
+exports.DiscoverDevices = undefined;
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
@@ -11,13 +11,15 @@ var _dslink = require('dslink');
 
 var _dslink2 = _interopRequireDefault(_dslink);
 
-var _add_device = require('../add_device');
+var _onvif = require('onvif');
 
-var _utils = require('../../utils');
+var _url = require('url');
 
-var _winston = require('winston');
+var _url2 = _interopRequireDefault(_url);
 
-var _winston2 = _interopRequireDefault(_winston);
+var _structure = require('../structure');
+
+var _utils = require('../utils');
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -27,58 +29,37 @@ function _possibleConstructorReturn(self, call) { if (!self) { throw new Referen
 
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
-var PanTiltZoom = exports.PanTiltZoom = function (_DS$SimpleNode$class) {
-  _inherits(PanTiltZoom, _DS$SimpleNode$class);
+var DiscoverDevices = exports.DiscoverDevices = function (_SimpleNode$class) {
+  _inherits(DiscoverDevices, _SimpleNode$class);
 
-  function PanTiltZoom(path, provider) {
-    _classCallCheck(this, PanTiltZoom);
+  function DiscoverDevices() {
+    _classCallCheck(this, DiscoverDevices);
 
-    var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(PanTiltZoom).call(this, path, provider));
-
-    _this.serializable = false;
-    return _this;
+    return _possibleConstructorReturn(this, Object.getPrototypeOf(DiscoverDevices).apply(this, arguments));
   }
 
-  _createClass(PanTiltZoom, [{
+  _createClass(DiscoverDevices, [{
     key: 'onInvoke',
-    value: function onInvoke(params) {
-      var obj = {};
-      if (params.pan) obj.x = parseInt(params.pan);
-      if (params.tilt) obj.y = parseInt(params.tilt);
-      if (params.zoom) obj.zoom = parseInt(params.zoom);
-
-      var cam = _add_device.cameras[this.configs.$$name];
-
-      var _promiseify = (0, _utils.promiseify)({
-        returnedData: {}
-      });
+    value: function onInvoke() {
+      var _promiseify = (0, _utils.promiseify)();
 
       var promise = _promiseify.promise;
       var _ = _promiseify._;
 
-      cam.continuousMove(obj, _);
+      _onvif.Discovery.probe({ resolve: false }, _);
 
-      promise.then(function () {
-        if (!params.duration) return {};
-
-        var _promiseify2 = (0, _utils.promiseify)();
-
-        var promise = _promiseify2.promise;
-        var _ = _promiseify2._;
-
-        setTimeout(function () {
-          cam.stop({
-            panTilt: typeof obj.zoom === 'undefined',
-            zoom: typeof obj.zoom !== 'undefined'
-          }, _);
-        }, parseInt(params.duration) * 1000);
-
-        return promise;
-      }).catch(function (err) {
-        _winston2.default.error(err + ':\n' + err.stack);
+      return promise.then(function (cams) {
+        console.log('Successfully probed ' + cams.length + ' devices.');
+        return cams.map(function (data) {
+          var camUri = _url2.default.parse(data.probeMatches.probeMatch.XAddrs);
+          return {
+            hostname: camUri.hostname,
+            port: parseInt(camUri.port, 10)
+          };
+        });
       });
     }
   }]);
 
-  return PanTiltZoom;
-}(_dslink2.default.SimpleNode.class);
+  return DiscoverDevices;
+}(_dslink.SimpleNode.class);

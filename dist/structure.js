@@ -4,6 +4,14 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 exports.cameraStructure = cameraStructure;
+var discoverColumns = exports.discoverColumns = [{
+  name: 'hostname',
+  type: 'string'
+}, {
+  name: 'port',
+  type: 'int'
+}];
+
 var defaultNodes = exports.defaultNodes = {
   addDevice: {
     $name: 'Add ONVIF Device',
@@ -27,6 +35,14 @@ var defaultNodes = exports.defaultNodes = {
       type: 'string',
       editor: 'password'
     }]
+  },
+  discoverDevices: {
+    $name: 'Discover Devices',
+    $is: 'discoverDevices',
+    $invokable: 'write',
+    $result: 'table',
+    $params: [],
+    $columns: discoverColumns
   }
 };
 
@@ -45,6 +61,7 @@ function cameraStructure(params, data, snapshotUrl) {
   var firmwareVersion = data.firmwareVersion;
   var serialNumber = data.serialNumber;
   var hardwareId = data.hardwareId;
+
 
   return {
     $is: 'device',
