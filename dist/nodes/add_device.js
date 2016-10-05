@@ -73,23 +73,34 @@ function addCamera(params) {
 
 
     camera.getSnapshotUri(_);
-
     return promise.then(function (uri) {
       return {
         data: data,
         uri: uri.uri.trim()
       };
     });
+  }).then(function (data) {
+    var _promiseify4 = (0, _utils.promiseify)();
+
+    var promise = _promiseify4.promise;
+    var _ = _promiseify4._;
+
+
+    camera.getStreamUri({ protocol: 'RTSP' }, _);
+    return promise.then(function (uri) {
+      data.rtsp = uri.uri.trim();
+      return data;
+    });
   });
 }
 
-var AddDevice = exports.AddDevice = function (_SimpleNode$class) {
-  _inherits(AddDevice, _SimpleNode$class);
+var AddDevice = exports.AddDevice = function (_SimpleNode) {
+  _inherits(AddDevice, _SimpleNode);
 
   function AddDevice() {
     _classCallCheck(this, AddDevice);
 
-    return _possibleConstructorReturn(this, Object.getPrototypeOf(AddDevice).apply(this, arguments));
+    return _possibleConstructorReturn(this, (AddDevice.__proto__ || Object.getPrototypeOf(AddDevice)).apply(this, arguments));
   }
 
   _createClass(AddDevice, [{
@@ -102,9 +113,10 @@ var AddDevice = exports.AddDevice = function (_SimpleNode$class) {
       addCamera(params).then(function (obj) {
         var data = obj.data;
         var uri = obj.uri;
+        var rtsp = obj.rtsp;
 
         console.log('Camera ' + prettyName + ' initialized successfully, adding node.');
-        _this2.provider.addNode('/' + params.name, (0, _structure.cameraStructure)(params, data, uri));
+        _this2.provider.addNode('/' + params.name, (0, _structure.cameraStructure)(params, data, uri, rtsp));
 
         return {};
       }).catch(function (err) {
@@ -115,6 +127,6 @@ var AddDevice = exports.AddDevice = function (_SimpleNode$class) {
   }]);
 
   return AddDevice;
-}(_dslink.SimpleNode.class);
+}(_dslink.SimpleNode);
 
 ;

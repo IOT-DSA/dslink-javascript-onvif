@@ -31,13 +31,13 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 
 var wasCalled = {};
 
-var DeviceNode = exports.DeviceNode = function (_SimpleNode$class) {
-  _inherits(DeviceNode, _SimpleNode$class);
+var DeviceNode = exports.DeviceNode = function (_SimpleNode) {
+  _inherits(DeviceNode, _SimpleNode);
 
   function DeviceNode() {
     _classCallCheck(this, DeviceNode);
 
-    return _possibleConstructorReturn(this, Object.getPrototypeOf(DeviceNode).apply(this, arguments));
+    return _possibleConstructorReturn(this, (DeviceNode.__proto__ || Object.getPrototypeOf(DeviceNode)).apply(this, arguments));
   }
 
   _createClass(DeviceNode, [{
@@ -61,9 +61,10 @@ var DeviceNode = exports.DeviceNode = function (_SimpleNode$class) {
           (0, _add_device.addCamera)(params).then(function (obj) {
             var data = obj.data;
             var uri = obj.uri;
+            var rtsp = obj.rtsp;
 
             console.log('Camera ' + prettyName + ' loaded successfully from nodes.json, populating node.');
-            _this2.load((0, _structure.cameraStructure)(params, data, uri), false);
+            _this2.load((0, _structure.cameraStructure)(params, data, uri, rtsp), false);
           }).catch(function (err) {
             _this2.provider.removeNode(_this2.path);
 
@@ -73,9 +74,9 @@ var DeviceNode = exports.DeviceNode = function (_SimpleNode$class) {
         })();
       }
 
-      _get(Object.getPrototypeOf(DeviceNode.prototype), 'load', this).call(this, map);
+      _get(DeviceNode.prototype.__proto__ || Object.getPrototypeOf(DeviceNode.prototype), 'load', this).call(this, map);
     }
   }]);
 
   return DeviceNode;
-}(_dslink.SimpleNode.class);
+}(_dslink.SimpleNode);

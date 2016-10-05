@@ -29,18 +29,20 @@ function _possibleConstructorReturn(self, call) { if (!self) { throw new Referen
 
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
-var DiscoverDevices = exports.DiscoverDevices = function (_SimpleNode$class) {
-  _inherits(DiscoverDevices, _SimpleNode$class);
+var DiscoverDevices = exports.DiscoverDevices = function (_SimpleNode) {
+  _inherits(DiscoverDevices, _SimpleNode);
 
   function DiscoverDevices() {
     _classCallCheck(this, DiscoverDevices);
 
-    return _possibleConstructorReturn(this, Object.getPrototypeOf(DiscoverDevices).apply(this, arguments));
+    return _possibleConstructorReturn(this, (DiscoverDevices.__proto__ || Object.getPrototypeOf(DiscoverDevices)).apply(this, arguments));
   }
 
   _createClass(DiscoverDevices, [{
     key: 'onInvoke',
     value: function onInvoke() {
+      console.log('Searching for local devices...');
+
       var _promiseify = (0, _utils.promiseify)();
 
       var promise = _promiseify.promise;
@@ -49,7 +51,7 @@ var DiscoverDevices = exports.DiscoverDevices = function (_SimpleNode$class) {
       _onvif.Discovery.probe({ resolve: false }, _);
 
       return promise.then(function (cams) {
-        console.log('Successfully probed ' + cams.length + ' devices.');
+        console.log('Successfully discovered ' + cams.length + ' devices.');
         return cams.map(function (data) {
           var camUri = _url2.default.parse(data.probeMatches.probeMatch.XAddrs);
           return {
@@ -62,4 +64,4 @@ var DiscoverDevices = exports.DiscoverDevices = function (_SimpleNode$class) {
   }]);
 
   return DiscoverDevices;
-}(_dslink.SimpleNode.class);
+}(_dslink.SimpleNode);

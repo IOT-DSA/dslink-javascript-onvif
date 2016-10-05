@@ -20,14 +20,14 @@ function generateProfiles() {
 }
 
 function promiseify() {
-  var obj = arguments.length <= 0 || arguments[0] === undefined ? {} : arguments[0];
+  var obj = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
   var returnedData = obj.returnedData;
   var allowAdditionalData = obj.allowAdditionalData;
 
   allowAdditionalData = allowAdditionalData || false;
 
-  var resolve = undefined,
-      reject = undefined;
+  var resolve = void 0,
+      reject = void 0;
 
   return {
     promise: new Promise(function (resolve_cb, reject_cb) {

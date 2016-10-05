@@ -51,7 +51,7 @@ var getStreamColumns = exports.getStreamColumns = [{
   type: 'binary'
 }];
 
-function cameraStructure(params, data, snapshotUrl) {
+function cameraStructure(params, data, snapshotUrl, streamUrl) {
   var username = params.username;
   var password = params.password;
   var hostname = params.hostname;
@@ -75,6 +75,12 @@ function cameraStructure(params, data, snapshotUrl) {
       $is: 'unserializable',
       $type: 'string',
       '?value': snapshotUrl
+    },
+    streamUrl: {
+      $name: 'Video Stream URL (RTSP)',
+      $is: 'unserializable',
+      $type: 'string',
+      '?value': streamUrl
     },
     platform: {
       $is: 'unserializable',
@@ -120,16 +126,6 @@ function cameraStructure(params, data, snapshotUrl) {
         type: 'binary'
       }]
     },
-    /*
-    getStream: {
-      $is: 'getStream',
-      $name: 'Get Video Stream',
-      $$name: name,
-      $invokable: 'write',
-      $result: 'stream',
-      $columns: getStreamColumns
-    },
-    */
     pan: {
       $is: 'panTiltZoom',
       $name: 'Pan Device',

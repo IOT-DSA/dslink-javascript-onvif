@@ -27,13 +27,13 @@ function _possibleConstructorReturn(self, call) { if (!self) { throw new Referen
 
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
-var PanTiltZoom = exports.PanTiltZoom = function (_DS$SimpleNode$class) {
-  _inherits(PanTiltZoom, _DS$SimpleNode$class);
+var PanTiltZoom = exports.PanTiltZoom = function (_DS$SimpleNode) {
+  _inherits(PanTiltZoom, _DS$SimpleNode);
 
   function PanTiltZoom(path, provider) {
     _classCallCheck(this, PanTiltZoom);
 
-    var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(PanTiltZoom).call(this, path, provider));
+    var _this = _possibleConstructorReturn(this, (PanTiltZoom.__proto__ || Object.getPrototypeOf(PanTiltZoom)).call(this, path, provider));
 
     _this.serializable = false;
     return _this;
@@ -81,4 +81,4 @@ var PanTiltZoom = exports.PanTiltZoom = function (_DS$SimpleNode$class) {
   }]);
 
   return PanTiltZoom;
-}(_dslink2.default.SimpleNode.class);
+}(_dslink2.default.SimpleNode);

@@ -33,13 +33,13 @@ function _possibleConstructorReturn(self, call) { if (!self) { throw new Referen
 
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
-var GetSnapshot = exports.GetSnapshot = function (_SimpleNode$class) {
-  _inherits(GetSnapshot, _SimpleNode$class);
+var GetSnapshot = exports.GetSnapshot = function (_SimpleNode) {
+  _inherits(GetSnapshot, _SimpleNode);
 
   function GetSnapshot(path, provider) {
     _classCallCheck(this, GetSnapshot);
 
-    var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(GetSnapshot).call(this, path, provider));
+    var _this = _possibleConstructorReturn(this, (GetSnapshot.__proto__ || Object.getPrototypeOf(GetSnapshot)).call(this, path, provider));
 
     _this.serializable = false;
     return _this;
@@ -48,7 +48,7 @@ var GetSnapshot = exports.GetSnapshot = function (_SimpleNode$class) {
   _createClass(GetSnapshot, [{
     key: 'load',
     value: function load(map) {
-      _get(Object.getPrototypeOf(GetSnapshot.prototype), 'load', this).call(this, map);
+      _get(GetSnapshot.prototype.__proto__ || Object.getPrototypeOf(GetSnapshot.prototype), 'load', this).call(this, map);
     }
   }, {
     key: 'onInvoke',
@@ -109,4 +109,4 @@ var GetSnapshot = exports.GetSnapshot = function (_SimpleNode$class) {
   }]);
 
   return GetSnapshot;
-}(_dslink.SimpleNode.class);
+}(_dslink.SimpleNode);

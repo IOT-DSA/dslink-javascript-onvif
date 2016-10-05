@@ -1,7 +1,6 @@
 #!/usr/bin/env bash
-rm -rf build
-mkdir build
-cp -R index.js package.json build/
-cd build
-zip -r ../../../files/onvif.zip .
-cd ..
+set -e
+rm -rf .git
+touch .buildscript
+rm -rf ../../files/dslink-javascript-onvif.zip
+zip -x '.git/*' -r ../../files/dslink-javascript-onvif.zip .

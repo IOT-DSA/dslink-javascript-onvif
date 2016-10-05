@@ -16,7 +16,7 @@
   "homepage": "https://github.com/IOT-DSA/dslink-javascript-onvif",
   "dependencies": {
     "babel-polyfill": "^6.3.14",
-    "dslink": "^1.0.0",
+    "dslink": "^1.2.0",
     "onvif": "git://github.com/agsh/onvif.git",
     "winston": "^2.1.1",
     "yellowstone": "^1.0.3"
